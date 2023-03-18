@@ -30,14 +30,16 @@ const Navbar = (props: Props) => {
         onPointerEnter={() => setExpanded(true)}
         onPointerLeave={() => setExpanded(false)}
       >
-        <h1 className='text-3xl text-[#242424] font-black items-center flex'>
-          T
-          <span className={`overflow-hidden transition-all inline-block w-0 ${expanded ? 'w-32' : 'w-0'}`}>ransient</span>
-          <span className='text-[#e84b8a] items-center flex'>
-            M
-            <span className={`overflow-hidden transition-all inline-block w-0 ${expanded ? 'w-10' : 'w-0'}`}>ail</span>
-          </span>
-        </h1>
+        <a href='/'>
+          <h1 className='text-3xl text-[#242424] font-black items-center flex'>
+            T
+            <span className={`overflow-hidden transition-all inline-block w-0 ${expanded ? 'w-32' : 'w-0'}`}>ransient</span>
+            <span className='text-[#e84b8a] items-center flex'>
+              M
+              <span className={`overflow-hidden transition-all inline-block w-0 ${expanded ? 'w-10' : 'w-0'}`}>ail</span>
+            </span>
+          </h1>
+        </a>
 
         <div className={`flex flex-col gap-2 overflow-hidden transition-all ${expanded ? 'w-56' : 'w-0'}`}>
           <a className='py-1 px-2 hover:bg-[#eceef2] text-[#242424] hover:text-[#e84b8a] rounded whitespace-nowrap' href='https://docs.mail.tm/'>API</a>
