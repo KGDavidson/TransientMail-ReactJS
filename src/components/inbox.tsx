@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { MAIL_TM_BASE_URL } from '../constants';
 import { Message, User } from '../types';
 import {HiOutlineMail, HiOutlineClipboardCheck} from 'react-icons/hi'
-import {BiExit} from 'react-icons/bi'
+import {BiExit, BiLoaderAlt, BiRefresh} from 'react-icons/bi'
 import { useQuery } from 'react-query';
 
 type Props = {
@@ -24,7 +24,7 @@ const Inbox = (props: Props) => {
 
   const [clicked, setClicked ] = useState(false)
 
-  const { isLoading: messagesIsLoading, error: messagesError, data: messages } = useQuery(['messages', user], async (): Promise<Message[]> => {
+  const { isLoading, error, data: messages, refetch, isRefetching } = useQuery(['messages', user], async (): Promise<Message[]> => {
     if (!user) {
       setMessageId(undefined)
       return [] as  Message[]
@@ -46,7 +46,11 @@ const Inbox = (props: Props) => {
     if (!(messages as Message[]).find((message) => message.id === messageId)) setMessageId(undefined)
 
     return messages as Message[]
+  }, {
+    refetchInterval: 5 * 1000, // 10 seconds
   })
+
+  const RefreshIcon = isLoading || isRefetching ? BiLoaderAlt : BiRefresh
 
   return (
     <div className='h-screen font-semibold text-base bg-[#f3f5f9] text-[#87898e] w-7/12 flex flex-col'>
@@ -67,19 +71,27 @@ const Inbox = (props: Props) => {
           </div>
           <h3>{user && user.address}</h3>
         </button>
-        <BiExit 
-          className='text-2xl hover:text-[#aeb1b8] transition-all'
-          onClick={() => {
-            axios.delete(`${MAIL_TM_BASE_URL}/accounts/${user?.id}`, {
-              headers: {
-                "Authorization": `Bearer ${user?.token}`
-              }
-            })
-            localStorage.removeItem('user')
-            setHasMounted(false)
-            setMessageId(undefined)
-          }}
-        />
+        <div className='flex items-center gap-4'>
+          <RefreshIcon 
+            className={`text-2xl hover:text-[#aeb1b8] transition-all cursor-pointer ${isLoading || isRefetching && 'animate-spin'}`}
+            onClick={() => {
+              refetch()
+            }}
+          />
+          <BiExit 
+            className='text-2xl hover:text-[#aeb1b8] transition-all cursor-pointer'
+            onClick={() => {
+              axios.delete(`${MAIL_TM_BASE_URL}/accounts/${user?.id}`, {
+                headers: {
+                  "Authorization": `Bearer ${user?.token}`
+                }
+              })
+              localStorage.removeItem('user')
+              setHasMounted(false)
+              setMessageId(undefined)
+            }}
+          />
+        </div>
       </div>
       <ul className='flex flex-col-reverse overflow-y-scroll'>
         {messages && messages.slice().reverse().map(({
