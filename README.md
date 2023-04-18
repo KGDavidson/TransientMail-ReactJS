@@ -2,7 +2,7 @@
 
 A temporary email service powered by mail.tm and built with React
 
-![UI](https://i.postimg.cc/sxjYnqSq/ezgif-com-optimize-2.gif)
+![UI](https://i.postimg.cc/4N5fkMcw/ezgif-com-optimize-3.gif)
 
 ---
 
